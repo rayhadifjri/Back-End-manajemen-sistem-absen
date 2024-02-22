@@ -1,0 +1,73 @@
+GET http://localhost:5000/getUsers
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFkcmllbCBPbWFycGFkdSBQYW5kaWFuZ2FuIiwicGFzc3dvcmQiOiJBZHJpZWwgT21hcnBhZHUgUGFuZGlhbmdhbiIsImlkX2xldmVsIjo2LCJpYXQiOjE3MDg1MTMwODEsImV4cCI6MTcwODUxMzk4MX0.YQ7vj5wVA250L_3a_gVYkuFDdCV3dw643MuKqrqLXaw
+
+###
+GET http://localhost:5000/getUserbyId/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1vY2hhbWFkIFJ1bGx5IFByYXNldHlvIiwicGFzc3dvcmQiOiJNb2NoYW1hZCBSdWxseSBQcmFzZXR5byIsImlkX2xldmVsIjoxLCJpYXQiOjE3MDgxNzY4MzksImV4cCI6MTcwODE3NzczOX0.EL785ph8koM5uCu5Wjxvx6ILNHq63l-uDaOpXSNcr2Q
+
+###
+GET http://localhost:5000/getUsersbyPartialUsername/Deni
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1vY2hhbWFkIFJ1bGx5IFByYXNldHlvIiwicGFzc3dvcmQiOiJNb2NoYW1hZCBSdWxseSBQcmFzZXR5byIsImlkX2xldmVsIjoxLCJpYXQiOjE3MDc4NDY4NzYsImV4cCI6MTcwNzg0Nzc3Nn0.rZZoZfrhS8D1gMgy0XpAdi1t7RDE6JPgCTfd0tGFH1U
+
+###
+GET http://localhost:5000/getUsersbyProdi/8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1vY2hhbWFkIFJ1bGx5IFByYXNldHlvIiwicGFzc3dvcmQiOiJNb2NoYW1hZCBSdWxseSBQcmFzZXR5byIsImlkX2xldmVsIjoxLCJpYXQiOjE3MDgxNzkwMzQsImV4cCI6MTcwODE3OTkzNH0.o6rwtSRpesNrmtL-rJzdopEja-_N-8STtcDm7rcGBXQ
+
+###
+PATCH http://localhost:5000/editUser/15
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFkcmllbCBPbWFycGFkdSBQYW5kaWFuZ2FuIiwicGFzc3dvcmQiOiJBZHJpZWwgT21hcnBhZHUgUGFuZGlhbmdhbiIsImlkX2xldmVsIjo2LCJpYXQiOjE3MDc4MzExNDIsImV4cCI6MTcwNzgzMjA0Mn0.6ewzBrQlNJag1Lmf8km5JP1UXDHPhU_nqHnaoqQyfNs
+Content-Type: application/json
+
+{
+    "username" : "Gutri Rahmad Zuwa",
+    "password" : "Gutri Rahmad Zuwa"
+}
+
+###
+GET http://localhost:5000/refreshToken
+
+###
+DELETE http://localhost:5000/deleteUser/6
+
+###
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "username": "Adriel Omarpadu Pandiangan",
+    "password": "Adriel Omarpadu Pandiangan"
+}
+
+### Login Admin
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "username": "Mochamad Rully Prasetyo",
+    "password": "Mochamad Rully Prasetyo"
+}
+
+
+###
+POST http://localhost:5000/register
+
+Content-Type: application/json
+
+{
+    "username": "Adriel Omarpadu Pandiangan",
+    "password": "Adriel Omarpadu Pandiangan",
+    "email": "dielp632@gmail.com",
+    "no_personel": "320200401001",
+    "id_level": "6"
+}
+
+
+###
+GET http://localhost:5000/refreshToken
+
+###
+DELETE http://localhost:5000/logout
+
+###
+GET http://localhost:5000/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1vY2hhbWFkIFJ1bGx5IFByYXNldHlvIiwiZW1haWwiOiJtb2NocnVsbHlAZ21haWwuY29tIiwiaWRfbGV2ZWwiOjEsImlhdCI6MTcwODYwNjYxOCwiZXhwIjoxNzA4NjA3NTE4fQ.d5UWfTjvn73bszACBmVqdMpJhzFN4YdpUrYjsrpby8s
