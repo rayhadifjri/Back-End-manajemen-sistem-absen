@@ -15,10 +15,11 @@ const refreshToken = async (req, res) => {
         if (!user) return res.sendStatus(403) // Forbidden
         jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
             if (err) return res.sendStatus(403)
+            const id_user = user[0].id_user
             const username = user[0].username
             const email = user[0].email
             const id_level = user[0].id_level
-            const accessToken = jwt.sign({ username, email, id_level }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' })
+            const accessToken = jwt.sign({ id_user, username, email, id_level }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' })
             res.json({ accessToken })
         });
         

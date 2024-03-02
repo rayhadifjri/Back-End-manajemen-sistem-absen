@@ -2,8 +2,8 @@ GET http://localhost:5000/getUsers
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFkcmllbCBPbWFycGFkdSBQYW5kaWFuZ2FuIiwicGFzc3dvcmQiOiJBZHJpZWwgT21hcnBhZHUgUGFuZGlhbmdhbiIsImlkX2xldmVsIjo2LCJpYXQiOjE3MDg1MTMwODEsImV4cCI6MTcwODUxMzk4MX0.YQ7vj5wVA250L_3a_gVYkuFDdCV3dw643MuKqrqLXaw
 
 ###
-GET http://localhost:5000/getUserbyId/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1vY2hhbWFkIFJ1bGx5IFByYXNldHlvIiwicGFzc3dvcmQiOiJNb2NoYW1hZCBSdWxseSBQcmFzZXR5byIsImlkX2xldmVsIjoxLCJpYXQiOjE3MDgxNzY4MzksImV4cCI6MTcwODE3NzczOX0.EL785ph8koM5uCu5Wjxvx6ILNHq63l-uDaOpXSNcr2Q
+GET http://localhost:5000/getUserbyId/31
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFkcmllbCBPbWFycGFkdSBQYW5kaWFuZ2FuIiwicGFzc3dvcmQiOiJBZHJpZWwgT21hcnBhZHUgUGFuZGlhbmdhbiIsImlkX2xldmVsIjo2LCJpYXQiOjE3MDg4MDUyMjQsImV4cCI6MTcwODgwNjEyNH0.54L0XkuEGJGQsop1o1_4mJ_D6XZDxntSaL-WM_o5rtU
 
 ###
 GET http://localhost:5000/getUsersbyPartialUsername/Deni
@@ -71,3 +71,16 @@ DELETE http://localhost:5000/logout
 ###
 GET http://localhost:5000/me
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1vY2hhbWFkIFJ1bGx5IFByYXNldHlvIiwiZW1haWwiOiJtb2NocnVsbHlAZ21haWwuY29tIiwiaWRfbGV2ZWwiOjEsImlhdCI6MTcwODYwNjYxOCwiZXhwIjoxNzA4NjA3NTE4fQ.d5UWfTjvn73bszACBmVqdMpJhzFN4YdpUrYjsrpby8s
+
+###
+POST http://localhost:5000/sicknessPermit/31
+Content-Type: multipart/form-data
+
+{
+    "id_ketijin": 1,
+    "tanggal_mulai": "2024-02-25",
+    "tanggal_selesai": "2024-02-26",
+    "files": ,
+    "deskripsi": "Sakit perut",
+    "status_ijin": 1
+}

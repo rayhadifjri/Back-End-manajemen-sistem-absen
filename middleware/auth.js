@@ -7,12 +7,6 @@ const verifyToken = (req, res, next) => {
     if (token == null) {
         return res.status(401).json({ error: "Unauthorized - Token is null" });
     }
-    // try {
-    //     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    //     next();
-    // } catch (err) {
-    //     return res.status(403).json({ error: "Forbidden - Token is not valid" });
-    // }
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
         if (err) {
             return res.status(403).json({ error: "Forbidden - Token is not valid" });

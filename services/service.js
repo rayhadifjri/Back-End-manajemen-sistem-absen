@@ -5,6 +5,7 @@ const { response } = require("express");
 const { Result } = require("express-validator");
 const Users = require("../models/userModel.js");
 const { Op } = require('sequelize');
+const Ijinkhusus = require('../models/ijinkhususModel.js');
 
 
 // Create a new user, get user, and edit user
@@ -174,6 +175,36 @@ const logout = async (refreshToken, res) => {
     });
 }
 
+const ijinSakit = async (id_user, id_ketijin, tanggal_mulai, tanggal_selesai, files, deskripsi, status_ijin) => {
+    try {
+        // Cari pengguna berdasarkan id_user
+        const user = await Users.findOne({
+            where: {
+                id_user: id_user
+            }
+        });
+
+        // Periksa apakah pengguna ditemukan
+        if (!user) {
+            throw new Error("Pengguna tidak ditemukan");
+        }
+
+        // Tambahkan data absensi sakit ke dalam database
+        const ijinSakitData = await Ijinkhusus.create({
+            id_user: id_user,
+            id_ketijin: id_ketijin,
+            tanggal_mulai: tanggal_mulai,
+            tanggal_selesai: tanggal_selesai,
+            files: files.path,
+            deskripsi: deskripsi,
+            status_ijin: status_ijin
+        });
+
+        return ijinSakitData;
+    } catch (error) {
+        throw new Error("Gagal melakukan absensi sakit: " + error.message);
+    }
+}
 
 module.exports = {
     editUser,
@@ -183,5 +214,6 @@ module.exports = {
     register,
     getUsers,
     logout,
-    login
+    login,
+    ijinSakit
 }

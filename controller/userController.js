@@ -42,7 +42,6 @@ const getUserbyId = async (req, res) => {
 
 const register = async (req, res) => {
     const { username, password, email, no_personel, id_level } = req.body;
-    console.log(username, password, email, no_personel, id_level);
     try {
         var result = await Services.register(username, password, email, no_personel, id_level);
         if (!result) {
@@ -147,6 +146,18 @@ const logout = async (req, res) => {
     }
 }
 
+const ijinSakit = async (req, res) => {
+    const { id_user } = req.params;
+    const { id_ketijin, tanggal_mulai, tanggal_selesai, deskripsi, status_ijin } = req.body;
+    const file = req.files; // Menggunakan req.file karena menggunakan .single() dalam multer
+    try {
+        const result = await Services.ijinSakit(id_user, id_ketijin, tanggal_mulai, tanggal_selesai, files, deskripsi, status_ijin);
+        res.status(200).json({ message: result });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
 
 
 module.exports = {
@@ -157,5 +168,6 @@ module.exports = {
     register,
     getUsers,
     logout,
-    login
+    login,
+    ijinSakit
 }

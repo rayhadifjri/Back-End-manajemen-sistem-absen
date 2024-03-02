@@ -5,6 +5,7 @@ const { Auth } = require('../middleware');
 const { refresh } = require('../controller');
 const { AuthAdmin } = require('../middleware');
 const { AuthWhoAmI } = require('../middleware');
+const { Multer } = require('../middleware');
 
 router.route('/login').post(userController.login);
 router.route('/register').post(Auth.verifyToken, userController.register);
@@ -16,5 +17,6 @@ router.route('/refreshToken').get(refresh.refreshToken);
 router.route('/logout').delete(userController.logout);
 router.route('/deleteUser/:id_user').delete(Auth.verifyToken, userController.deleteUser);
 router.route('/me').get(Auth.verifyToken, AuthWhoAmI.whoami)
+router.route('/sicknessPermit/:id_user').post(Multer.uploadSickness , userController.ijinSakit)
 
 module.exports = router;

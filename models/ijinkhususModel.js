@@ -19,7 +19,8 @@ const Ijinkhusus = dbClient.define('ijinkhusus',{
     deskripsi: DataTypes.STRING,
     status_ijin: DataTypes.INTEGER
 }, {
-    freezeTableName: true
+    freezeTableName: true,
+    timestamps: false // Tambahkan opsi timestamps di sini
 })
 
 Ijinkhusus.belongsTo(Users, { foreignKey: 'id_user' })

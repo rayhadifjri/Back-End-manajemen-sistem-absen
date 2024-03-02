@@ -21,7 +21,10 @@ const whoami = async (req, res) => {
                     username
                 }
             });
-            return res.json(user);
+        // Cetak atribut user ke konsol
+        console.log("User attributes:", user.dataValues);
+        
+        res.status(200).json(user);
         });
     } catch (error) {
         return res.status(403).json({ error: "Forbidden - Token is not valid" });
