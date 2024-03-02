@@ -27,6 +27,16 @@ Content-Type: application/json
 GET http://localhost:5000/refreshToken
 
 ###
+GET http://localhost:5000/getijinbyidketijin/1
+
+###
+PATCH http://localhost:5000/deleteijin/71
+
+###
+PATCH http://localhost:5000/approvedIjinSakit/74
+
+
+###
 DELETE http://localhost:5000/deleteUser/6
 
 ###
@@ -80,7 +90,7 @@ Content-Type: multipart/form-data
     "id_ketijin": 1,
     "tanggal_mulai": "2024-02-25",
     "tanggal_selesai": "2024-02-26",
-    "files": ,
+    "files": "file",
     "deskripsi": "Sakit perut",
     "status_ijin": 1
 }

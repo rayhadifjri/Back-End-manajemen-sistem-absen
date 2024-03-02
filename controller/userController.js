@@ -15,7 +15,7 @@ const getUsers = async (req, res) => {
 }
 
 const getUserbyId = async (req, res) => {
-    const {id_user} = req.params
+    const { id_user } = req.params
     try {
         const hasil = await Services.getUserbyId(id_user);
         if (!hasil) {
@@ -58,11 +58,54 @@ const editUser = async (req, res) => {
     const { id_user } = req.params
     const { username, password } = req.body;
     try {
-        var result = await Services.editUser(id_user , username, password);
+        var result = await Services.editUser(id_user, username, password);
         if (!result) {
             throw new Error("Gagal Update User");
         }
         res.send(result);
+    } catch (error) {
+        res.status(400).send(error.message)
+        console.log(error);
+    }
+}
+
+const getijinbyidketijin = async (req, res) => {
+    const { id_ketijin } = req.params
+    try {
+        const result = await Services.getijinbyidketijin(id_ketijin);
+        if (!result) {
+            res.status(404).send("Ijin tidak ditemukan");
+        }
+        res.send(result);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const deleteijin = async (req, res) => {
+    const { id_ijinkhusus } = req.params
+    const { status_ijin } = req.body
+    try {
+        var result = await Services.deleteijin(id_ijinkhusus, status_ijin);
+        if (!result) {
+            throw new Error("Gagal Delete Ijin");
+        }
+        res.send(result)
+    } catch (error) {
+        res.status(400).send(error.message)
+        console.log(error);
+    }
+}
+
+const approvedIjinSakit = async (req, res) => {
+    const { id_ijinkhusus } = req.params
+    const { status_ijin } = req.body
+    try {
+        var result = await Services.approvedIjinSakit(id_ijinkhusus, status_ijin);
+        if (!result) {
+            throw new Error("Gagal approve sakit")
+        }
+        res.send(result)
     } catch (error) {
         res.status(400).send(error.message)
         console.log(error);
@@ -136,7 +179,7 @@ const logout = async (req, res) => {
         // await Services.logout(refreshToken);
         if (refreshToken) {
             await Services.logout(refreshToken);
-        }else {
+        } else {
             return res.sendStatus(204);
         }
         res.clearCookie("refreshToken");
@@ -149,16 +192,53 @@ const logout = async (req, res) => {
 const ijinSakit = async (req, res) => {
     const { id_user } = req.params;
     const { id_ketijin, tanggal_mulai, tanggal_selesai, deskripsi, status_ijin } = req.body;
-    const file = req.files; // Menggunakan req.file karena menggunakan .single() dalam multer
+
+    if (!req.file) {
+        return res.status(400).send("No file uploaded.");
+    }
+    const files = req.file.originalname;
+    
     try {
-        const result = await Services.ijinSakit(id_user, id_ketijin, tanggal_mulai, tanggal_selesai, files, deskripsi, status_ijin);
+        const result = await Services.ijinSakit(id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin);
         res.status(200).json({ message: result });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 }
 
+const dinasLuar = async (req, res) => {
+    const { id_user } = req.params;
+    const { id_ketijin, tanggal_mulai, tanggal_selesai, deskripsi, status_ijin } = req.body;
 
+    if (!req.file) {
+        return res.status(400).send("No file uploaded.");
+    }
+    const files = req.file.originalname;
+    
+    try {
+        const result = await Services.dinasLuar(id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin);
+        res.status(200).json({ message: result });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
+const pengajuanCuti = async (req, res) => {
+    const { id_user } = req.params;
+    const { id_ketijin, tanggal_mulai, tanggal_selesai, deskripsi, status_ijin } = req.body;
+
+    if (!req.file) {
+        return res.status(400).send("No file uploaded.");
+    }
+    const files = req.file.originalname;
+    
+    try {
+        const result = await Services.pengajuanCuti(id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin);
+        res.status(200).json({ message: result });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
 
 module.exports = {
     editUser,
@@ -169,5 +249,10 @@ module.exports = {
     getUsers,
     logout,
     login,
-    ijinSakit
+    dinasLuar,
+    ijinSakit,
+    pengajuanCuti,
+    getijinbyidketijin,
+    deleteijin,
+    approvedIjinSakit
 }

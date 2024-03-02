@@ -28,21 +28,15 @@ const storageExternal = multer.diskStorage({
 });
 
 // Inisialisasi multer dengan konfigurasi storage untuk setiap jenis aplikasi
-const uploadSickness = multer({
+exports.uploadSickness = multer({
     storage: storageSickness,
     limits: { fileSize: 10 * 1024 * 1024 } // 10MB sebagai contoh ukuran maksimum
-}).single('file');
-const uploadLeave = multer({
+}).single('files');
+exports.uploadLeave = multer({
     storage: storageLeave,
     limits: { fileSize: 10 * 1024 * 1024 } // 10MB sebagai contoh ukuran maksimum
-}).single('file');
-const uploadExternal = multer({
+}).single('files');
+exports.uploadExternal = multer({
     storage: storageExternal,
     limits: { fileSize: 10 * 1024 * 1024 } // 10MB sebagai contoh ukuran maksimum
-}).single('file');
-
-module.exports = {
-    uploadSickness,
-    uploadLeave,
-    uploadExternal
-};
+}).single('files');

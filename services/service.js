@@ -14,7 +14,7 @@ const getUsers = async () => {
     try {
         const users = await Users.findAll(
             {
-                attributes: ['id_user','username', 'email', 'id_level']
+                attributes: ['id_user', 'username', 'email', 'id_level']
             }
         );
         return users;
@@ -23,10 +23,78 @@ const getUsers = async () => {
     }
 }
 
+const getijinbyidketijin = async (id_ketijin) => {
+    try {
+        const ijin = await Ijinkhusus.findAll(
+            {
+                attributes: ['id_ijinkhusus' ,'deskripsi', 'files', 'status_ijin'],
+                where: {
+                    id_ketijin
+                },
+                include: [{
+                    model: Users, // Tabel users
+                    attributes: ['username'] // Hanya pilih kolom username dari tabel users
+                }]
+            }
+        )
+        return ijin;
+    } catch (error) {
+        throw error;
+    }
+}
+
+const deleteijin = async (id_ijinkhusus) => {
+    try {
+        const rejected = await Ijinkhusus.findOne({
+            where: {
+                id_ijinkhusus
+            }
+        });
+        if (rejected) {
+            const result = await Ijinkhusus.update({
+                status_ijin : 0
+            }, {
+                where: {
+                    id_ijinkhusus
+                }
+            });
+            return result
+        }else {
+            throw new Error("Ijin sakit tidak ditemukan");
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
+const approvedIjinSakit = async (id_ijinkhusus, status_ijin) => {
+    try {
+        const approve = await Ijinkhusus.findOne({
+            where: {
+                id_ijinkhusus
+            }
+        });
+        if (approve) {
+            const result = await Ijinkhusus.update({
+                status_ijin : 5
+            }, {
+                where: {
+                    id_ijinkhusus
+                }
+            });
+            return result
+        }else {
+            throw new Error("Ijin sakit tidak ditemukan");
+        }
+    } catch (error) {
+        throw error
+    }
+}
+
 const getUserbyId = async (id_user) => {
     try {
         const user = await Users.findOne({
-            attributes: ['id_user','username', 'email', 'id_level'],
+            attributes: ['id_user', 'username', 'email', 'id_level'],
             where: {
                 id_user
             }
@@ -54,7 +122,7 @@ const getUserbyId = async (id_user) => {
 const getUsersByPartialUsername = async (partialUsername) => {
     try {
         const users = await Users.findAll({
-            attributes: ['id_user','username', 'email', 'id_level'],
+            attributes: ['id_user', 'username', 'email', 'id_level'],
             where: {
                 username: {
                     [Op.iLike]: '%' + partialUsername + '%' // Use the iLike operator for case-insensitive search
@@ -88,27 +156,27 @@ const register = async (username, password, email, no_personel, id_level) => {
 const editUser = async (id_user, username, password) => {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
-    try{
+    try {
         const user = await Users.findOne({
             where: {
                 id_user
             }
         });
         if (user) {
-            await Users.update({ 
+            await Users.update({
                 username,
                 password: hash
             }, {
-                where: { 
+                where: {
                     id_user
                 }
             });
             return "Berhasil Update User";
         }
-        else{
+        else {
             return "Gagal Update User";
         }
-    }catch (error) {
+    } catch (error) {
         console.error(error);
         return null;
     }
@@ -129,10 +197,10 @@ const deleteUser = async (id_user) => {
             });
             return "Berhasil Delete User";
         }
-        else{
+        else {
             return "Gagal Delete User";
         }
-    }catch (error) {
+    } catch (error) {
         console.error(error);
         return null;
     }
@@ -169,40 +237,89 @@ const logout = async (refreshToken, res) => {
     if (!user[0]) return console.log("User tidak ditemukan");
     const username = user[0].username;
     await Users.update({ refresh_token: null }, {
-        where: { 
-            username 
+        where: {
+            username
         }
     });
 }
 
-const ijinSakit = async (id_user, id_ketijin, tanggal_mulai, tanggal_selesai, files, deskripsi, status_ijin) => {
+const ijinSakit = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin) => {
     try {
-        // Cari pengguna berdasarkan id_user
+        // Lakukan operasi yang sesuai di sini, misalnya menyimpan data ke database atau melakukan validasi lainnya.
+        // Pastikan id_ketijin tidak null dan lakukan operasi yang diperlukan.
         const user = await Users.findOne({
             where: {
-                id_user: id_user
+                id_user
             }
-        });
+        })
 
-        // Periksa apakah pengguna ditemukan
-        if (!user) {
-            throw new Error("Pengguna tidak ditemukan");
+        // Contoh operasi: menyimpan data ke database
+        if (user) {
+            const result = await Ijinkhusus.create({
+                id_user,
+                id_ketijin,
+                tanggal_mulai,
+                files,
+                tanggal_selesai,
+                deskripsi,
+                status_ijin
+            });
+            return result;
+        } else {
+            throw new Error("User tidak ditemukan");
         }
-
-        // Tambahkan data absensi sakit ke dalam database
-        const ijinSakitData = await Ijinkhusus.create({
-            id_user: id_user,
-            id_ketijin: id_ketijin,
-            tanggal_mulai: tanggal_mulai,
-            tanggal_selesai: tanggal_selesai,
-            files: files.path,
-            deskripsi: deskripsi,
-            status_ijin: status_ijin
-        });
-
-        return ijinSakitData;
     } catch (error) {
         throw new Error("Gagal melakukan absensi sakit: " + error.message);
+    }
+}
+
+const dinasLuar = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin) => {
+    try {
+        const user = await Users.findOne({
+            where: {
+                id_user
+            }
+        })
+        if (user) {
+            const result = await Ijinkhusus.create({
+                id_user,
+                id_ketijin,
+                tanggal_mulai,
+                files,
+                tanggal_selesai,
+                deskripsi,
+                status_ijin
+            });
+            return result;
+        } else {
+            throw new Error("User tidak ditemukan");
+        }
+    } catch (error) {
+        throw new Error("Gagal mengajukan absensi dinas luar: " + error.message);
+    }
+}
+
+const pengajuanCuti = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin) => {
+    try {
+        const user = await Users.findOne({
+            id_user
+        })
+        if (user) {
+            const result = await Ijinkhusus.create({
+                id_user,
+                id_ketijin,
+                tanggal_mulai,
+                files,
+                tanggal_selesai,
+                deskripsi,
+                status_ijin
+            });
+            return result;
+        } else {
+            throw new Error("User tidak ditemukan");
+        }
+    } catch (error) {
+        throw new Error("Gagal mengajukan cuti: " + error.message)
     }
 }
 
@@ -215,5 +332,10 @@ module.exports = {
     getUsers,
     logout,
     login,
-    ijinSakit
+    ijinSakit,
+    dinasLuar,
+    pengajuanCuti,
+    getijinbyidketijin,
+    deleteijin,
+    approvedIjinSakit
 }
