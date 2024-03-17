@@ -14,6 +14,9 @@ GET http://localhost:5000/getUsersbyProdi/8
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1vY2hhbWFkIFJ1bGx5IFByYXNldHlvIiwicGFzc3dvcmQiOiJNb2NoYW1hZCBSdWxseSBQcmFzZXR5byIsImlkX2xldmVsIjoxLCJpYXQiOjE3MDgxNzkwMzQsImV4cCI6MTcwODE3OTkzNH0.o6rwtSRpesNrmtL-rJzdopEja-_N-8STtcDm7rcGBXQ
 
 ###
+GET http://localhost:5000/getApprovedIjinSakit/82
+
+###
 PATCH http://localhost:5000/editUser/15
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFkcmllbCBPbWFycGFkdSBQYW5kaWFuZ2FuIiwicGFzc3dvcmQiOiJBZHJpZWwgT21hcnBhZHUgUGFuZGlhbmdhbiIsImlkX2xldmVsIjo2LCJpYXQiOjE3MDc4MzExNDIsImV4cCI6MTcwNzgzMjA0Mn0.6ewzBrQlNJag1Lmf8km5JP1UXDHPhU_nqHnaoqQyfNs
 Content-Type: application/json
@@ -33,7 +36,7 @@ GET http://localhost:5000/getijinbyidketijin/1
 PATCH http://localhost:5000/deleteijin/71
 
 ###
-PATCH http://localhost:5000/approvedIjinSakit/74
+PATCH http://localhost:5000/approvedIjinSakit/82
 
 
 ###
@@ -93,4 +96,23 @@ Content-Type: multipart/form-data
     "files": "file",
     "deskripsi": "Sakit perut",
     "status_ijin": 1
+}
+
+
+###
+GET http://localhost:5000/getProdi
+
+###
+GET http://localhost:5000/getFakultas
+
+###
+GET http://localhost:5000/getKetangkatan
+
+###
+GET http://localhost:5000/getUserbyProdiandAngkatan
+Content-Type: application/json
+
+{
+    "id_prodi": 8,
+    "id_ketangkatan": 0
 }

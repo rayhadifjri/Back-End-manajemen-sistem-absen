@@ -6,6 +6,10 @@ const { Result } = require("express-validator");
 const Users = require("../models/userModel.js");
 const { Op } = require('sequelize');
 const Ijinkhusus = require('../models/ijinkhususModel.js');
+const Prodi = require('../models/prodiModel.js');
+const { Fakultas, Angkatan } = require("../models/index.js");
+const { Ketangkatan } = require("../models/index.js")
+const { angkatan } = require("../models/index.js")
 
 
 // Create a new user, get user, and edit user
@@ -27,7 +31,7 @@ const getijinbyidketijin = async (id_ketijin) => {
     try {
         const ijin = await Ijinkhusus.findAll(
             {
-                attributes: ['id_ijinkhusus' ,'deskripsi', 'files', 'status_ijin'],
+                attributes: ['id_ijinkhusus', 'deskripsi', 'files', 'status_ijin'],
                 where: {
                     id_ketijin
                 },
@@ -52,14 +56,14 @@ const deleteijin = async (id_ijinkhusus) => {
         });
         if (rejected) {
             const result = await Ijinkhusus.update({
-                status_ijin : 0
+                status_ijin: 0
             }, {
                 where: {
                     id_ijinkhusus
                 }
             });
             return result
-        }else {
+        } else {
             throw new Error("Ijin sakit tidak ditemukan");
         }
     } catch (error) {
@@ -76,14 +80,14 @@ const approvedIjinSakit = async (id_ijinkhusus, status_ijin) => {
         });
         if (approve) {
             const result = await Ijinkhusus.update({
-                status_ijin : 5
+                status_ijin: 5
             }, {
                 where: {
                     id_ijinkhusus
                 }
             });
             return result
-        }else {
+        } else {
             throw new Error("Ijin sakit tidak ditemukan");
         }
     } catch (error) {
@@ -273,6 +277,20 @@ const ijinSakit = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_sele
     }
 }
 
+const getApprovedIjinSakit = async (id_ijinkhusus) => {
+    try {
+        const getIjin = await Ijinkhusus.findOne({
+            attributes: ['id_ketijin', 'deskripsi', 'status_ijin'],
+            where: {
+                id_ijinkhusus
+            }
+        });
+        return getIjin;
+    } catch (error) {
+        throw new Error("Gagal mendapatkan ijin sakit: " + error.message);
+    }
+}
+
 const dinasLuar = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin) => {
     try {
         const user = await Users.findOne({
@@ -323,10 +341,98 @@ const pengajuanCuti = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_
     }
 }
 
+const absensiDinasLuar = async (id_user, nama_lokasi, id_matperiode, pertemuan_ke) => {
+    try {
+        const user = await Users.findOne({
+            where: {
+                id_user
+            }
+        });
+
+    } catch (error) {
+        throw new Error("Gagal melakukan absensi dinas luar: " + error.message);
+    }
+
+}
+
+const getProdi = async () => {
+    try {
+        const prodi = await Prodi.findAll(
+            {
+                attributes: ['id_prodi', 'nama_prodi']
+            }
+        );
+        return prodi;
+    } catch (error) {
+        throw new Error("Gagal mendapatkan prodi: " + error.message)
+    }
+}
+
+const getFakultas = async () => {
+    try {
+        const fakultas = await Fakultas.findAll(
+            {
+                attributes: ['id_fakultas', 'nama_fakultas']
+            }
+        );
+        return fakultas;
+    } catch (error) {
+        throw new Error("Gagal mendapatkan fakultas: " + error.message)
+    }
+
+}
+
+const getKetangkatan = async () => {
+    try {
+        const ketangkatan = await Ketangkatan.findAll(
+            {
+                attributes: ['id_ketangkatan', 'nama_angkatan']
+            }
+        );
+        return ketangkatan;
+    } catch (error) {
+        throw new Error("Gagal mendapatkan ketangkatan: " + error.message)
+    }
+}
+
+const getAngkatan = async (id_prodi, id_ketangkatan) => {
+    try {
+        const angkatan = await Angkatan.findAll(
+            {
+                attributes: ['id_angkatan', 'id_user', 'id_ketangkatan', 'id_prodi'],
+                where: {
+                    id_prodi,
+                    id_ketangkatan
+                },
+                include: [
+                    {
+                        model: Users, // Tabel users
+                        attributes: ['username'] // Hanya pilih kolom username dari tabel users
+                    },
+                    {
+                        model: Prodi, // Tabel prodi
+                        attributes: ['nama_prodi'] // Hanya pilih kolom nama_prodi dari tabel prodi
+                    },
+                    {
+                        model: Ketangkatan, // Tabel ketangkatan
+                        attributes: ['nama_angkatan'] // Hanya pilih kolom nama_angkatan dari tabel ketangkatan
+                    }
+                ]
+            })
+        return angkatan
+    } catch (error) {
+        throw new Error("Gagal mendapatkan angkatan: " + error.message)
+    }
+}
+
 module.exports = {
     editUser,
     getUserbyId,
+    getProdi,
     getUsersByPartialUsername,
+    getKetangkatan,
+    getFakultas,
+    getAngkatan,
     deleteUser,
     register,
     getUsers,
@@ -337,5 +443,7 @@ module.exports = {
     pengajuanCuti,
     getijinbyidketijin,
     deleteijin,
-    approvedIjinSakit
+    approvedIjinSakit,
+    getApprovedIjinSakit,
+    absensiDinasLuar
 }

@@ -112,6 +112,20 @@ const approvedIjinSakit = async (req, res) => {
     }
 }
 
+const getApprovedIjinSakit = async (req, res) => {
+    const { id_ijinkhusus } = req.params
+    try {
+        var result = await Services.getApprovedIjinSakit(id_ijinkhusus);
+        if (!result) {
+            throw new Error("Gagal Menampilkan approve sakit")
+        }
+        res.send(result)
+    } catch (error) {
+        res.status(400).send(error.message)
+        console.log(error);
+    }
+}
+
 const getUsersByPartialUsername = async (req, res) => {
     try {
         const partialUsername = req.params.partialUsername;
@@ -240,10 +254,62 @@ const pengajuanCuti = async (req, res) => {
     }
 }
 
+const absensiDinasLuar = async (req, res) => {
+    const { id_user } = req.params;
+    const { nama_lokasi, id_matperiode, pertemuan_ke } = req.body;
+    try {
+        const result = await Services.absensiDinasLuar(id_user, nama_lokasi, id_matperiode, pertemuan_ke);
+        res.status(200).json({ message: result });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
+const getProdi = async (req, res) => {
+    try {
+        const result = await Services.getProdi();
+        res.status(200).json({ data: result });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
+const getFakultas = async (req, res) => {
+    try {
+        const result = await Services.getFakultas();
+        res.status(200).json({ data: result });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
+const getKetangkatan = async (req, res) => {
+    try {
+        const result = await Services.getKetangkatan();
+        res.status(200).json({ data: result });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
+const getAngkatan = async (req, res) => {
+    const { id_prodi, id_ketangkatan } = req.body
+    try {
+        const result = await Services.getAngkatan(id_prodi, id_ketangkatan );
+        res.send(result);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
 module.exports = {
     editUser,
     getUserbyId,
     getUsersByPartialUsername,
+    getKetangkatan,
+    getFakultas,
+    getProdi,
+    getAngkatan,
     deleteUser,
     register,
     getUsers,
@@ -254,5 +320,7 @@ module.exports = {
     pengajuanCuti,
     getijinbyidketijin,
     deleteijin,
-    approvedIjinSakit
+    approvedIjinSakit,
+    getApprovedIjinSakit,
+    absensiDinasLuar
 }

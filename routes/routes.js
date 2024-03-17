@@ -17,11 +17,16 @@ router.route('/refreshToken').get(refresh.refreshToken);
 router.route('/logout').delete(userController.logout);
 router.route('/deleteUser/:id_user').delete(Auth.verifyToken, userController.deleteUser);
 router.route('/me').get(Auth.verifyToken, AuthWhoAmI.whoami)
+router.route('/getApprovedIjinSakit/:id_ijinkhusus').get(userController.getApprovedIjinSakit)
 router.route('/sicknessPermit/:id_user').post(Multer.uploadSickness, userController.ijinSakit)
 router.route('/externalApplication/:id_user').post(Multer.uploadExternal, userController.dinasLuar)
 router.route('/leaveApplication/:id_user').post(Multer.uploadLeave, userController.pengajuanCuti)
 router.route('/getijinbyidketijin/:id_ketijin').get(userController.getijinbyidketijin)
 router.route('/deleteijin/:id_ijinkhusus').patch(userController.deleteijin)
 router.route('/approvedIjinSakit/:id_ijinkhusus').patch(userController.approvedIjinSakit)
+router.route('/getProdi').get(userController.getProdi)
+router.route('/getFakultas').get(userController.getFakultas)
+router.route('/getKetangkatan').get(userController.getKetangkatan)
+router.route('/getUserbyProdiandAngkatan').get(userController.getAngkatan)
 
 module.exports = router;
