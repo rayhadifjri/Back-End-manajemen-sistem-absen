@@ -2,6 +2,8 @@ const express = require('express');
 const { Services } = require("../services");
 const jwt = require("jsonwebtoken");
 const Users = require("../models/userModel.js");
+var nodemailer = require('nodemailer');
+const bcrypt = require("bcrypt");
 
 // user
 
@@ -154,15 +156,16 @@ const deleteUser = async (req, res) => {
 // Login and logout
 
 const login = async (req, res) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
     try {
-        const hasil = await Services.login(username, password);
+        const hasil = await Services.login(email, password);
         if (!hasil) {
-            throw new Error("Username atau Password Salah");
+            throw new Error("email atau Password Salah");
         } else {
+            const username = hasil.username;
             const id_level = hasil.id_level;
-            const accessToken = jwt.sign({ username, password, id_level }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
-            const refreshToken = jwt.sign({ username, password, id_level }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
+            const accessToken = jwt.sign({ email, username, password, id_level }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+            const refreshToken = jwt.sign({ email, username, password, id_level }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
 
             await Users.update({ refresh_token: refreshToken }, {
                 where: { username: username }
@@ -183,6 +186,74 @@ const login = async (req, res) => {
         res.status(400).json({ msg: "User tidak ditemukan" });
     }
 };
+
+const forgetPassword = async (req, res) => {
+    const { email } = req.body;
+    try {
+        const hasil = await Services.forgetPassword(email);
+        if (!hasil) {
+            throw new Error("user tidak ditemukan");
+        } else {
+            const id_user = hasil.id_user;
+            // const username = hasil.username;
+            // const password = hasil.password;
+            const token = jwt.sign({ id_user }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
+            var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'regimentcadet@gmail.com',
+                    pass: 'hyxn pabt olyi gdqc'
+                }
+            });
+
+            var mailOptions = {
+                from: 'regimentcadet@gmail.com',
+                to: email,
+                subject: 'Reset Your Password',
+                text: `http://localhost:3000/reset-password/${id_user}/${token}`
+            };
+
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    return res.send({ status: "Success" });
+                }
+            });
+        }
+    } catch (error) {
+        res.status(400).send(error.message)
+        console.log(error);
+    }
+}
+
+const resetPassword = async (req, res) => {
+    const { id_user, token } = req.params;
+    const { password } = req.body;
+    try {
+        // const hasil = await Services.resetPassword(id_user, password, token);
+        // if (!hasil) {
+        //     throw new Error("Gagal reset password");
+        // }
+        // res.send(hasil);
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
+            if (err) {
+                return res.status(403).json({ error: "Forbidden - Token is not valid" });
+            }
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const result = await Users.update({ password: hashedPassword }, {
+                where: { id_user: id_user }
+            });
+            if (!result) {
+                throw new Error("Gagal reset password");
+            }
+            res.send(result);
+        })
+    } catch (error) {
+        res.status(400).send(error.message)
+        console.log(error);
+    }
+}
 
 const logout = async (req, res) => {
     try {
@@ -211,7 +282,7 @@ const ijinSakit = async (req, res) => {
         return res.status(400).send("No file uploaded.");
     }
     const files = req.file.originalname;
-    
+
     try {
         const result = await Services.ijinSakit(id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin);
         res.status(200).json({ message: result });
@@ -228,7 +299,7 @@ const dinasLuar = async (req, res) => {
         return res.status(400).send("No file uploaded.");
     }
     const files = req.file.originalname;
-    
+
     try {
         const result = await Services.dinasLuar(id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin);
         res.status(200).json({ message: result });
@@ -245,7 +316,7 @@ const pengajuanCuti = async (req, res) => {
         return res.status(400).send("No file uploaded.");
     }
     const files = req.file.originalname;
-    
+
     try {
         const result = await Services.pengajuanCuti(id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin);
         res.status(200).json({ message: result });
@@ -293,9 +364,9 @@ const getKetangkatan = async (req, res) => {
 }
 
 const getAngkatan = async (req, res) => {
-    const { id_prodi, id_ketangkatan } = req.body
+    const { id_prodi, id_ketangkatan } = req.query;
     try {
-        const result = await Services.getAngkatan(id_prodi, id_ketangkatan );
+        const result = await Services.getAngkatan(id_prodi, id_ketangkatan);
         res.send(result);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -315,6 +386,7 @@ module.exports = {
     getUsers,
     logout,
     login,
+    forgetPassword,
     dinasLuar,
     ijinSakit,
     pengajuanCuti,
@@ -322,5 +394,6 @@ module.exports = {
     deleteijin,
     approvedIjinSakit,
     getApprovedIjinSakit,
+    resetPassword,
     absensiDinasLuar
 }

@@ -47,7 +47,7 @@ POST http://localhost:5000/login
 Content-Type: application/json
 
 {
-    "username": "Adriel Omarpadu Pandiangan",
+    "email": "Adriel Omarpadu Pandiangan",
     "password": "Adriel Omarpadu Pandiangan"
 }
 
@@ -56,7 +56,7 @@ POST http://localhost:5000/login
 Content-Type: application/json
 
 {
-    "username": "Mochamad Rully Prasetyo",
+    "email": "mochrully@gmail.com",
     "password": "Mochamad Rully Prasetyo"
 }
 

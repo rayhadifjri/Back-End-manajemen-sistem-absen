@@ -66,10 +66,12 @@ CREATE TABLE matkulperiode (
 
 CREATE TABLE pesertakelas (
 	id_peskel SERIAL PRIMARY KEY NOT NULL,
-	id_periode INT NOT NULL,
+	id_matperiode INT NOT NULL,
+	id_prodi INT NOT NULL,
 	id_user INT NOT NULL,
-	FOREIGN KEY (id_periode) REFERENCES periode(id_periode),
-	FOREIGN KEY (id_user) REFERENCES users(id_user)
+	FOREIGN KEY (id_matperiode) REFERENCES matkulperiode(id_matperiode),
+	FOREIGN KEY (id_user) REFERENCES users(id_user),
+	FOREIGN KEY (id_prodi) REFERENCES prodi(id_prodi)
 );
 
 CREATE TABLE jadwalharian (
@@ -77,7 +79,6 @@ CREATE TABLE jadwalharian (
 	id_matperiode INT NOT NULL, 
 	id_user INT NOT NULL,
 	pertemuan_ke INT NOT NULL,
-	"createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (id_matperiode) REFERENCES matkulperiode(id_matperiode),
 	FOREIGN KEY (id_user) REFERENCES users(id_user)
 );

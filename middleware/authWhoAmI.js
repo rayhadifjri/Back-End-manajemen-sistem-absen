@@ -14,7 +14,7 @@ const whoami = async (req, res) => {
             if (err) {
                 return res.status(403).json({ error: "Forbidden - Token is not valid" });
             }
-            const username = decoded.username 
+            const email = decoded.email 
             const user = await Users.findOne({
                 attributes: ['id_user','username', 'email', 'id_level'],
                 where: {

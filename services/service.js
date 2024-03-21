@@ -210,11 +210,11 @@ const deleteUser = async (id_user) => {
     }
 };
 
-const login = async (username, password) => {
+const login = async (email, password) => {
     try {
         const user = await Users.findOne({
             where: {
-                username
+                email
             }
         });
         if (!user) {
@@ -232,7 +232,58 @@ const login = async (username, password) => {
     }
 };
 
-const logout = async (refreshToken, res) => {
+const forgetPassword = async (email) => {
+    try {
+        const user = await Users.findOne({
+            where: {
+                email
+            }
+        });
+        if (!user) {
+            return null;
+        }
+        return user;
+    }
+    catch (error) {
+        console.error(error);
+        return null;
+    }
+};
+
+const resetPassword = async (id_user, token, password) => {
+    // return new Promise((resolve, reject) => {
+    //     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
+    //         if (err) {
+    //             return reject(new Error("Token tidak valid"));
+    //         }
+    //         try {
+    //             const user = await Users.findOne({
+    //                 where: {
+    //                     id_user
+    //                 }
+    //             });
+    //             if (!user) {
+    //                 return reject(new Error("User tidak ditemukan"));
+    //             }
+    //             const salt = await bcrypt.genSalt(10);
+    //             const hash = await bcrypt.hash(password, salt);
+    //             await Users.update({
+    //                 password: hash
+    //             }, {
+    //                 where: {
+    //                     id_user
+    //                 }
+    //             });
+    //             resolve(user);
+    //         } catch (error) {
+    //             console.log(error);
+    //             reject(error);
+    //         }
+    //     });
+    // });
+}
+
+const logout = async (refreshToken) => {
     const user = await Users.findAll({
         where: {
             refresh_token: refreshToken
@@ -407,7 +458,7 @@ const getAngkatan = async (id_prodi, id_ketangkatan) => {
                 include: [
                     {
                         model: Users, // Tabel users
-                        attributes: ['username'] // Hanya pilih kolom username dari tabel users
+                        attributes: ['username', 'email'] // Hanya pilih kolom username dari tabel users
                     },
                     {
                         model: Prodi, // Tabel prodi
@@ -440,10 +491,12 @@ module.exports = {
     login,
     ijinSakit,
     dinasLuar,
+    forgetPassword,
     pengajuanCuti,
     getijinbyidketijin,
     deleteijin,
     approvedIjinSakit,
     getApprovedIjinSakit,
-    absensiDinasLuar
+    absensiDinasLuar,
+    resetPassword
 }

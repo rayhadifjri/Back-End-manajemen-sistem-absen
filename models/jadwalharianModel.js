@@ -12,7 +12,7 @@ const Jadwalharian = dbClient.define('jadwalharian',{
         autoIncrement: true
     },
     id_matperiode: DataTypes.INTEGER,
-    id_user: DataTypes.INTEGER,
+    id_user: DataTypes.ARRAY(DataTypes.INTEGER), // Menggunakan ARRAY untuk kumpulan integer
     pertemuan_ke: DataTypes.INTEGER,
 })
 
