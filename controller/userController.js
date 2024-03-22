@@ -373,6 +373,26 @@ const getAngkatan = async (req, res) => {
     }
 }
 
+const getMasterStatusIjin = async (req, res) => {
+    const { id_level } = req.params;
+    try {
+        const result = await Services.getMasterStatusIjin(id_level);
+        res.status(200).json({ data: result });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
+const updateIjin = async (req, res) => {
+    const { id_ijinkhusus, isApproved, id_level } = req.body;
+    try {
+        const result = await Services.updateIjin(id_ijinkhusus, isApproved, id_level);
+        res.status(200).json({ data: result });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
 module.exports = {
     editUser,
     getUserbyId,
@@ -395,5 +415,7 @@ module.exports = {
     approvedIjinSakit,
     getApprovedIjinSakit,
     resetPassword,
-    absensiDinasLuar
+    absensiDinasLuar,
+    getMasterStatusIjin,
+    updateIjin
 }

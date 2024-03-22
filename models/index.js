@@ -16,3 +16,4 @@ module.exports.Ijinkhusus = require('./ijinkhususModel.js');
 module.exports.Fileperijinan = require('./fileperijinanModel.js');
 module.exports.Tokenqr = require('./tokenqrModel.js');
 module.exports.Statusperijinan = require('./statusperijinanModel.js');
+module.exports.MasterStatusIjin = require('./master_status_ijinModel.js');
