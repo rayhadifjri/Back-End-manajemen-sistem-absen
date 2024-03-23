@@ -1,5 +1,5 @@
 GET http://localhost:5000/getUsers
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFkcmllbCBPbWFycGFkdSBQYW5kaWFuZ2FuIiwicGFzc3dvcmQiOiJBZHJpZWwgT21hcnBhZHUgUGFuZGlhbmdhbiIsImlkX2xldmVsIjo2LCJpYXQiOjE3MDg1MTMwODEsImV4cCI6MTcwODUxMzk4MX0.YQ7vj5wVA250L_3a_gVYkuFDdCV3dw643MuKqrqLXaw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vY2hydWxseUBnbWFpbC5jb20iLCJ1c2VybmFtZSI6Ik1vY2hhbWFkIFJ1bGx5IFByYXNldHlvIiwicGFzc3dvcmQiOiJNb2NoYW1hZCBSdWxseSBQcmFzZXR5byIsImlkX2xldmVsIjoxLCJpYXQiOjE3MTExNTAyOTQsImV4cCI6MTcxMTE1MTE5NH0.izfTxCY7P728rK8jBr0DWS8HIYPzp9bk7kQZGawmou8
 
 ###
 GET http://localhost:5000/getUserbyId/31
@@ -7,7 +7,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFkc
 
 ###
 GET http://localhost:5000/getUsersbyPartialUsername/Deni
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1vY2hhbWFkIFJ1bGx5IFByYXNldHlvIiwicGFzc3dvcmQiOiJNb2NoYW1hZCBSdWxseSBQcmFzZXR5byIsImlkX2xldmVsIjoxLCJpYXQiOjE3MDc4NDY4NzYsImV4cCI6MTcwNzg0Nzc3Nn0.rZZoZfrhS8D1gMgy0XpAdi1t7RDE6JPgCTfd0tGFH1U
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vY2hydWxseUBnbWFpbC5jb20iLCJ1c2VybmFtZSI6Ik1vY2hhbWFkIFJ1bGx5IFByYXNldHlvIiwicGFzc3dvcmQiOiJNb2NoYW1hZCBSdWxseSBQcmFzZXR5byIsImlkX2xldmVsIjoxLCJpYXQiOjE3MTExMjc1MDQsImV4cCI6MTcxMTEyODQwNH0.fg498jq3mNfhBhdIgupdZwuBABVUd6LFlNCrJuB7z_I
 
 ###
 GET http://localhost:5000/getUsersbyProdi/8
@@ -104,6 +104,21 @@ GET http://localhost:5000/getProdi
 
 ###
 GET http://localhost:5000/getFakultas
+
+###
+GET http://localhost:5000/pengajuanIzin/2
+
+###
+GET http://localhost:5000/ketijin
+
+###
+GET http://localhost:5000/listPengajuanIzin
+
+###
+DELETE http://localhost:5000/hapusPengajuanIzin/90
+
+###
+GET http://localhost:5000/getLevel
 
 ###
 GET http://localhost:5000/getKetangkatan

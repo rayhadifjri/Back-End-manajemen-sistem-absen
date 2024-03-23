@@ -9,7 +9,9 @@ const Ketijin = dbClient.define('ketijin', {
         primaryKey: true,
         autoIncrement: true
     },
-    nama_ketijin: DataTypes.STRING
+    nama_ijin: DataTypes.STRING
+}, {
+    tableName: 'ketijin' // Menentukan nama tabel yang tepat
 })
 
 module.exports = Ketijin
