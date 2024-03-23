@@ -9,7 +9,8 @@ const Ijinkhusus = require('../models/ijinkhususModel.js');
 const Prodi = require('../models/prodiModel.js');
 const { Fakultas, Angkatan } = require("../models/index.js");
 const { Ketangkatan } = require("../models/index.js")
-const { angkatan } = require("../models/index.js")
+const Ketijin = require("../models/ketijinModel.js");
+const Level = require("../models/levelModel.js");
 
 
 // Create a new user, get user, and edit user
@@ -18,12 +19,18 @@ const getUsers = async () => {
     try {
         const users = await Users.findAll(
             {
-                attributes: ['id_user', 'username', 'email', 'id_level']
+                attributes: ['id_user', 'username', 'email', 'id_level'],
+                include: [
+                    {
+                        model: Level, // Tabel level
+                        attributes: ['nama_level'] // Hanya pilih kolom nama_level dari tabel level
+                    }
+                ]
             }
         );
         return users;
     } catch (error) {
-        return null;
+        throw error;
     }
 }
 
@@ -250,37 +257,16 @@ const forgetPassword = async (email) => {
     }
 };
 
-const resetPassword = async (id_user, token, password) => {
-    // return new Promise((resolve, reject) => {
-    //     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
-    //         if (err) {
-    //             return reject(new Error("Token tidak valid"));
-    //         }
-    //         try {
-    //             const user = await Users.findOne({
-    //                 where: {
-    //                     id_user
-    //                 }
-    //             });
-    //             if (!user) {
-    //                 return reject(new Error("User tidak ditemukan"));
-    //             }
-    //             const salt = await bcrypt.genSalt(10);
-    //             const hash = await bcrypt.hash(password, salt);
-    //             await Users.update({
-    //                 password: hash
-    //             }, {
-    //                 where: {
-    //                     id_user
-    //                 }
-    //             });
-    //             resolve(user);
-    //         } catch (error) {
-    //             console.log(error);
-    //             reject(error);
-    //         }
-    //     });
-    // });
+const resetPassword = async (id_user, password) => {
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const result = await Users.update({ password: hashedPassword }, {
+            where: { id_user: id_user }
+        });
+        return result;
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 const logout = async (refreshToken) => {
@@ -296,6 +282,91 @@ const logout = async (refreshToken) => {
             username
         }
     });
+}
+
+const listPengajuanIzin = async () => {
+    try {
+        const listIjin = await Ijinkhusus.findAll({
+            attributes: ['id_ijinkhusus', 'id_ketijin', 'files', 'deskripsi', 'status_ijin', 'tanggal_mulai', 'tanggal_selesai'],
+            include: [{
+                model: Ketijin,
+                attributes: ['nama_ijin']
+            },
+            {
+                model: Users,
+                attributes: ['username']
+            }]
+        });
+        return listIjin;
+    } catch (error) {
+        throw error;
+    }
+}
+
+const getLevel = async () => {
+    try {
+        const level = await Level.findAll({
+            attributes: ['id_level', 'nama_level']
+        });
+        return level;
+    } catch (error) {
+        throw error;
+    }
+}
+
+const hapusPengajuanIzin = async (id_ijinkhusus) => {
+    try {
+        const ijin = await Ijinkhusus.findOne({
+            where: {
+                id_ijinkhusus
+            }
+        });
+        if (ijin) {
+            const result = await Ijinkhusus.destroy({
+                where: {
+                    id_ijinkhusus
+                }
+            });
+            return result;
+        } else {
+            throw new Error("Ijin tidak ditemukan");
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
+const pengajuanIzin = async (id_user) => {
+    try {
+        const getIjin = await Ijinkhusus.findAll({
+            attributes: [ 'id_ijinkhusus', 'id_ketijin', 'files', 'deskripsi', 'status_ijin', 'tanggal_mulai', 'tanggal_selesai'],
+            where: {
+                id_user
+            },
+            include: [{
+                model: Ketijin,
+                attributes: ['nama_ijin']
+            },
+            {
+                model: Users,
+                attributes: ['username']
+            }]
+        });
+        return getIjin;
+    } catch (error) {
+        throw error;
+    }
+}
+
+const ketijin = async () => {
+    try {
+        const getKetijin = await Ketijin.findAll({
+            attributes: ['id_ketijin', 'nama_ijin']
+        });
+        return getKetijin;
+    } catch (error) {
+        throw error;
+    }
 }
 
 const ijinSakit = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin) => {
@@ -399,11 +470,10 @@ const absensiDinasLuar = async (id_user, nama_lokasi, id_matperiode, pertemuan_k
                 id_user
             }
         });
-
+    return user;
     } catch (error) {
         throw new Error("Gagal melakukan absensi dinas luar: " + error.message);
     }
-
 }
 
 const getProdi = async () => {
@@ -497,6 +567,11 @@ module.exports = {
     deleteijin,
     approvedIjinSakit,
     getApprovedIjinSakit,
+    pengajuanIzin,
     absensiDinasLuar,
-    resetPassword
+    resetPassword,
+    ketijin,
+    listPengajuanIzin,
+    hapusPengajuanIzin,
+    getLevel
 }

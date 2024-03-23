@@ -231,23 +231,15 @@ const resetPassword = async (req, res) => {
     const { id_user, token } = req.params;
     const { password } = req.body;
     try {
-        // const hasil = await Services.resetPassword(id_user, password, token);
-        // if (!hasil) {
-        //     throw new Error("Gagal reset password");
-        // }
-        // res.send(hasil);
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
             if (err) {
                 return res.status(403).json({ error: "Forbidden - Token is not valid" });
             }
-            const hashedPassword = await bcrypt.hash(password, 10);
-            const result = await Users.update({ password: hashedPassword }, {
-                where: { id_user: id_user }
-            });
-            if (!result) {
+            const hasil = await Services.resetPassword(id_user, password);
+            if (!hasil) {
                 throw new Error("Gagal reset password");
             }
-            res.send(result);
+            res.send(hasil);
         })
     } catch (error) {
         res.status(400).send(error.message)
@@ -271,6 +263,53 @@ const logout = async (req, res) => {
         return res.send("Berhasil Logout");
     } catch (error) {
         console.log(error);
+    }
+}
+
+const listPengajuanIzin = async (req, res) => {
+    try {
+        const result = await Services.listPengajuanIzin();
+        res.status(200).json({ data: result });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
+const hapusPengajuanIzin = async (req, res) => {
+    const { id_ijinkhusus } = req.params;
+    try {
+        const result = await Services.hapusPengajuanIzin(id_ijinkhusus);
+        res.status(200).json({ message: result });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
+const getLevel = async (req, res) => {
+    try {
+        const result = await Services.getLevel();
+        res.status(200).json({ data: result });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
+const pengajuanIzin = async (req, res) => {
+    const { id_user } = req.params;
+    try {
+        const result = await Services.pengajuanIzin(id_user);
+        res.status(200).json({ message: result });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
+const ketijin = async (req, res) => {
+    try {
+        const result = await Services.ketijin();
+        res.status(200).json({ data: result });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
     }
 }
 
@@ -395,5 +434,10 @@ module.exports = {
     approvedIjinSakit,
     getApprovedIjinSakit,
     resetPassword,
-    absensiDinasLuar
+    pengajuanIzin,
+    absensiDinasLuar,
+    ketijin,
+    listPengajuanIzin,
+    hapusPengajuanIzin,
+    getLevel
 }

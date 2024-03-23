@@ -19,8 +19,7 @@ const Ijinkhusus = dbClient.define('ijinkhusus',{
     deskripsi: DataTypes.STRING,
     status_ijin: DataTypes.INTEGER
 }, {
-    freezeTableName: true,
-    timestamps: false // Tambahkan opsi timestamps di sini
+    timestamps: false // Menonaktifkan pembuatan otomatis kolom 'createdAt' dan 'updatedAt'
 })
 
 Ijinkhusus.belongsTo(Users, { foreignKey: 'id_user' })
