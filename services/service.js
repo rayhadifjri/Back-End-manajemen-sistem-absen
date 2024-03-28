@@ -39,7 +39,7 @@ const getijinbyidketijin = async (id_ketijin) => {
     try {
         const ijin = await Ijinkhusus.findAll(
             {
-                attributes: ['id_ijinkhusus', 'deskripsi', 'files', 'status_ijin'],
+                attributes: ['id_ijinkhusus', 'deskripsi', 'files', 'id_status'],
                 where: {
                     id_ketijin
                 },
@@ -67,7 +67,7 @@ const deleteijin = async (id_ijinkhusus) => {
         });
         if (rejected) {
             const result = await Ijinkhusus.update({
-                status_ijin: 4
+                id_status: 4
             }, {
                 where: {
                     id_ijinkhusus
@@ -82,7 +82,7 @@ const deleteijin = async (id_ijinkhusus) => {
     }
 }
 
-const approvedIjinSakit = async (id_ijinkhusus, status_ijin) => {
+const approvedIjinSakit = async (id_ijinkhusus, id_status) => {
     try {
         const approve = await Ijinkhusus.findOne({
             where: {
@@ -91,7 +91,7 @@ const approvedIjinSakit = async (id_ijinkhusus, status_ijin) => {
         });
         if (approve) {
             const result = await Ijinkhusus.update({
-                status_ijin: 2
+                id_status: 2
             }, {
                 where: {
                     id_ijinkhusus
@@ -291,7 +291,7 @@ const logout = async (refreshToken) => {
 const listPengajuanIzin = async () => {
     try {
         const listIjin = await Ijinkhusus.findAll({
-            attributes: ['id_ijinkhusus', 'id_ketijin', 'files', 'deskripsi', 'status_ijin', 'tanggal_mulai', 'tanggal_selesai'],
+            attributes: ['id_ijinkhusus', 'id_ketijin', 'files', 'deskripsi', 'id_status', 'tanggal_mulai', 'tanggal_selesai'],
             include: [{
                 model: Ketijin,
                 attributes: ['nama_ijin']
@@ -348,7 +348,7 @@ const hapusPengajuanIzin = async (id_ijinkhusus) => {
 const pengajuanIzin = async (id_user) => {
     try {
         const getIjin = await Ijinkhusus.findAll({
-            attributes: ['id_ijinkhusus', 'id_ketijin', 'files', 'deskripsi', 'status_ijin', 'tanggal_mulai', 'tanggal_selesai'],
+            attributes: ['id_ijinkhusus', 'id_ketijin', 'files', 'deskripsi', 'id_status', 'tanggal_mulai', 'tanggal_selesai'],
             where: {
                 id_user
             },
@@ -383,7 +383,7 @@ const ketijin = async () => {
     }
 }
 
-const ijinSakit = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin) => {
+const ijinSakit = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, id_status) => {
     try {
         // Lakukan operasi yang sesuai di sini, misalnya menyimpan data ke database atau melakukan validasi lainnya.
         // Pastikan id_ketijin tidak null dan lakukan operasi yang diperlukan.
@@ -402,7 +402,7 @@ const ijinSakit = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_sele
                 files,
                 tanggal_selesai,
                 deskripsi,
-                status_ijin
+                id_status
             });
             return result;
         } else {
@@ -416,7 +416,7 @@ const ijinSakit = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_sele
 const getApprovedIjinSakit = async (id_ijinkhusus) => {
     try {
         const getIjin = await Ijinkhusus.findOne({
-            attributes: ['id_ketijin', 'deskripsi', 'status_ijin'],
+            attributes: ['id_ketijin', 'deskripsi', 'id_status'],
             where: {
                 id_ijinkhusus
             }
@@ -427,7 +427,7 @@ const getApprovedIjinSakit = async (id_ijinkhusus) => {
     }
 }
 
-const dinasLuar = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin) => {
+const dinasLuar = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, id_status) => {
     try {
         const user = await Users.findOne({
             where: {
@@ -442,7 +442,7 @@ const dinasLuar = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_sele
                 files,
                 tanggal_selesai,
                 deskripsi,
-                status_ijin
+                id_status
             });
             return result;
         } else {
@@ -453,7 +453,7 @@ const dinasLuar = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_sele
     }
 }
 
-const pengajuanCuti = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin) => {
+const pengajuanCuti = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, id_status) => {
     try {
         const user = await Users.findOne({
             id_user
@@ -466,7 +466,7 @@ const pengajuanCuti = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_
                 files,
                 tanggal_selesai,
                 deskripsi,
-                status_ijin
+                id_status
             });
             return result;
         } else {
@@ -595,12 +595,12 @@ const updateIjin = async (id_ijinkhusus, isApproved, id_level) => {
             ]
         });
 
-        const isValid = masterStatusIjin.some((status) => status.id_status === ijinKhusus.status_ijin);
+        const isValid = masterStatusIjin.some((status) => status.id_status === ijinKhusus.id_status);
 
         if (isValid) {
             if(isApproved){
                 let result = await Ijinkhusus.update({
-                    status_ijin: masterStatusIjin[1].id_status_next
+                    id_status: masterStatusIjin[1].id_status_next
                 }, {
                     where: {
                         id_ijinkhusus
@@ -609,7 +609,7 @@ const updateIjin = async (id_ijinkhusus, isApproved, id_level) => {
                 return result
             }else{
                 let result = await Ijinkhusus.update({
-                    status_ijin: masterStatusIjin[2].id_status_next
+                    id_status: masterStatusIjin[2].id_status_next
                 }, {
                     where: {
                         id_ijinkhusus
