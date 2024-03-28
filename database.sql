@@ -111,9 +111,10 @@ CREATE TABLE ijinkhusus (
 	tanggal_selesai DATE NOT NULL,
 	files TEXT NOT NULL,
 	deskripsi TEXT NOT NULL,
-	status_ijin INT NOT NULL, 
+	id_status INT NOT NULL, 
 	FOREIGN KEY (id_user) REFERENCES users(id_user),
-	FOREIGN KEY (id_ketijin) REFERENCES ketijin(id_ketijin)
+	FOREIGN KEY (id_ketijin) REFERENCES ketijin(id_ketijin),
+	FOREIGN KEY (id_status) REFERENCES master_status_ijin(id_status)
 );
 
 CREATE TABLE fileperijinan (
@@ -137,4 +138,12 @@ CREATE TABLE statusperijinan (
 	changed_by VARCHAR(255) NOT NULL,
 	tanggal DATE NOT NULL,
 	FOREIGN KEY (id_ijinkhusus) REFERENCES ijinkhusus(id_ijinkhusus)
+);
+
+CREATE TABLE master_status_ijin (
+	id_status SERIAL PRIMARY KEY NOT NULL,
+	"desc" VARCHAR(100) NOT NULL,
+	id_level INT NOT NULL,
+	id_status_next INT,
+	FOREIGN KEY (id_level) REFERENCES levels(id_level)
 );

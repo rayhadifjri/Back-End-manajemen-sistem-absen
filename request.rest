@@ -95,7 +95,7 @@ Content-Type: multipart/form-data
     "tanggal_selesai": "2024-02-26",
     "files": "file",
     "deskripsi": "Sakit perut",
-    "status_ijin": 1
+    "id_status": 1
 }
 
 

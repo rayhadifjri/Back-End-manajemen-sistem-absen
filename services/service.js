@@ -11,6 +11,7 @@ const { Fakultas, Angkatan } = require("../models/index.js");
 const { Ketangkatan } = require("../models/index.js")
 const Ketijin = require("../models/ketijinModel.js");
 const Level = require("../models/levelModel.js");
+const MasterStatusIjin = require("../models/master_status_ijinModel.js");
 
 
 // Create a new user, get user, and edit user
@@ -38,14 +39,17 @@ const getijinbyidketijin = async (id_ketijin) => {
     try {
         const ijin = await Ijinkhusus.findAll(
             {
-                attributes: ['id_ijinkhusus', 'deskripsi', 'files', 'status_ijin'],
+                attributes: ['id_ijinkhusus', 'deskripsi', 'files', 'id_status'],
                 where: {
                     id_ketijin
                 },
                 include: [{
                     model: Users, // Tabel users
                     attributes: ['username'] // Hanya pilih kolom username dari tabel users
-                }]
+                }, {
+                    model: MasterStatusIjin,
+                    attributes: ['id_status', 'desc', 'id_level', 'id_status_next']
+                }],
             }
         )
         return ijin;
@@ -63,7 +67,7 @@ const deleteijin = async (id_ijinkhusus) => {
         });
         if (rejected) {
             const result = await Ijinkhusus.update({
-                status_ijin: 0
+                id_status: 4
             }, {
                 where: {
                     id_ijinkhusus
@@ -78,7 +82,7 @@ const deleteijin = async (id_ijinkhusus) => {
     }
 }
 
-const approvedIjinSakit = async (id_ijinkhusus, status_ijin) => {
+const approvedIjinSakit = async (id_ijinkhusus, id_status) => {
     try {
         const approve = await Ijinkhusus.findOne({
             where: {
@@ -87,7 +91,7 @@ const approvedIjinSakit = async (id_ijinkhusus, status_ijin) => {
         });
         if (approve) {
             const result = await Ijinkhusus.update({
-                status_ijin: 5
+                id_status: 2
             }, {
                 where: {
                     id_ijinkhusus
@@ -287,7 +291,7 @@ const logout = async (refreshToken) => {
 const listPengajuanIzin = async () => {
     try {
         const listIjin = await Ijinkhusus.findAll({
-            attributes: ['id_ijinkhusus', 'id_ketijin', 'files', 'deskripsi', 'status_ijin', 'tanggal_mulai', 'tanggal_selesai'],
+            attributes: ['id_ijinkhusus', 'id_ketijin', 'files', 'deskripsi', 'id_status', 'tanggal_mulai', 'tanggal_selesai'],
             include: [{
                 model: Ketijin,
                 attributes: ['nama_ijin']
@@ -295,7 +299,12 @@ const listPengajuanIzin = async () => {
             {
                 model: Users,
                 attributes: ['username']
-            }]
+            },
+            {
+                model: MasterStatusIjin,
+                attributes: ['desc']
+            }
+        ]
         });
         return listIjin;
     } catch (error) {
@@ -339,7 +348,7 @@ const hapusPengajuanIzin = async (id_ijinkhusus) => {
 const pengajuanIzin = async (id_user) => {
     try {
         const getIjin = await Ijinkhusus.findAll({
-            attributes: [ 'id_ijinkhusus', 'id_ketijin', 'files', 'deskripsi', 'status_ijin', 'tanggal_mulai', 'tanggal_selesai'],
+            attributes: ['id_ijinkhusus', 'id_ketijin', 'files', 'deskripsi', 'id_status', 'tanggal_mulai', 'tanggal_selesai'],
             where: {
                 id_user
             },
@@ -369,7 +378,7 @@ const ketijin = async () => {
     }
 }
 
-const ijinSakit = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin) => {
+const ijinSakit = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, id_status) => {
     try {
         // Lakukan operasi yang sesuai di sini, misalnya menyimpan data ke database atau melakukan validasi lainnya.
         // Pastikan id_ketijin tidak null dan lakukan operasi yang diperlukan.
@@ -388,7 +397,7 @@ const ijinSakit = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_sele
                 files,
                 tanggal_selesai,
                 deskripsi,
-                status_ijin
+                id_status
             });
             return result;
         } else {
@@ -402,7 +411,7 @@ const ijinSakit = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_sele
 const getApprovedIjinSakit = async (id_ijinkhusus) => {
     try {
         const getIjin = await Ijinkhusus.findOne({
-            attributes: ['id_ketijin', 'deskripsi', 'status_ijin'],
+            attributes: ['id_ketijin', 'deskripsi', 'id_status'],
             where: {
                 id_ijinkhusus
             }
@@ -413,7 +422,7 @@ const getApprovedIjinSakit = async (id_ijinkhusus) => {
     }
 }
 
-const dinasLuar = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin) => {
+const dinasLuar = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, id_status) => {
     try {
         const user = await Users.findOne({
             where: {
@@ -428,7 +437,7 @@ const dinasLuar = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_sele
                 files,
                 tanggal_selesai,
                 deskripsi,
-                status_ijin
+                id_status
             });
             return result;
         } else {
@@ -439,7 +448,7 @@ const dinasLuar = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_sele
     }
 }
 
-const pengajuanCuti = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin) => {
+const pengajuanCuti = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, id_status) => {
     try {
         const user = await Users.findOne({
             id_user
@@ -452,7 +461,7 @@ const pengajuanCuti = async (id_user, id_ketijin, tanggal_mulai, files, tanggal_
                 files,
                 tanggal_selesai,
                 deskripsi,
-                status_ijin
+                id_status
             });
             return result;
         } else {
@@ -470,7 +479,7 @@ const absensiDinasLuar = async (id_user, nama_lokasi, id_matperiode, pertemuan_k
                 id_user
             }
         });
-    return user;
+        return user;
     } catch (error) {
         throw new Error("Gagal melakukan absensi dinas luar: " + error.message);
     }
@@ -546,6 +555,74 @@ const getAngkatan = async (id_prodi, id_ketangkatan) => {
     }
 }
 
+const getMasterStatusIjin = async (id_level) => {
+    try {
+        const masterStatusIjin = await MasterStatusIjin.findOne(
+            {
+                attributes: ['id_status', 'desc', 'id_level', 'id_status_next'],
+                where: {
+                    id_level: id_level
+                },
+                order: [
+                    ['id_status', 'ASC']
+                ]
+            }
+        );
+        return masterStatusIjin;
+    } catch (error) {
+        throw new Error("Gagal mendapatkan master status ijin: " + error.message)
+    }
+}
+
+const updateIjin = async (id_ijinkhusus, isApproved, id_level) => {
+    try {
+        const ijinKhusus = await Ijinkhusus.findOne({
+            where: {
+                id_ijinkhusus
+            }
+        });
+        const masterStatusIjin = await MasterStatusIjin.findAll(
+            {
+                attributes: ['id_status', 'desc', 'id_level', 'id_status_next'],
+                where: {
+                    id_level
+                },
+                order: [
+                    ['id_status', 'ASC']
+                ]
+            });
+
+        const isValid = masterStatusIjin.some((status) => status.id_status === ijinKhusus.id_status);
+
+        if (isValid) {
+            if (isApproved) {
+                let result = await Ijinkhusus.update({
+                    id_status: masterStatusIjin[1].id_status_next
+                }, {
+                    where: {
+                        id_ijinkhusus
+                    }
+                });
+                return result
+            } else {
+                let result = await Ijinkhusus.update({
+                    id_status: masterStatusIjin[2].id_status_next
+                }, {
+                    where: {
+                        id_ijinkhusus
+                    }
+                });
+                return result
+            }
+        } else {
+            throw new Error("Ijin sakit tidak ditemukan");
+        }
+    } catch (error) {
+        throw error
+    }
+}
+
+
 module.exports = {
     editUser,
     getUserbyId,
@@ -573,5 +650,7 @@ module.exports = {
     ketijin,
     listPengajuanIzin,
     hapusPengajuanIzin,
-    getLevel
+    getLevel,
+    getMasterStatusIjin,
+    updateIjin
 }

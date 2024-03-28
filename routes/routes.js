@@ -36,4 +36,7 @@ router.route('/forget-password').post(userController.forgetPassword)
 router.route('/hapusPengajuanIzin/:id_ijinkhusus').delete(userController.hapusPengajuanIzin)
 router.route('/reset-password/:id_user/:token').post(userController.resetPassword)
 
+router.route('/getMasterStatusIjin/:id_level').get(userController.getMasterStatusIjin)
+router.route('/updateIjin').post(userController.updateIjin)
+
 module.exports = router;
