@@ -18,13 +18,14 @@ const Ijinkhusus = dbClient.define('ijinkhusus',{
     tanggal_selesai: DataTypes.DATE,
     files: DataTypes.STRING,
     deskripsi: DataTypes.STRING,
-    id_status: DataTypes.INTEGER
+    status_ijin: DataTypes.INTEGER
 }, {
-    timestamps: false // Menonaktifkan pembuatan otomatis kolom 'createdAt' dan 'updatedAt'
+    freezeTableName: true,
+    timestamps: false // Tambahkan opsi timestamps di sini
 })
 
 Ijinkhusus.belongsTo(Users, { foreignKey: 'id_user' })
 Ijinkhusus.belongsTo(Ketijin, { foreignKey: 'id_ketijin' })
-Ijinkhusus.belongsTo(MasterStatusIjin, { foreignKey: 'id_status' })
+Ijinkhusus.belongsTo(MasterStatusIjin, { foreignKey: 'status_ijin' })
 
 module.exports = Ijinkhusus

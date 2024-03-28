@@ -86,9 +86,9 @@ const getijinbyidketijin = async (req, res) => {
 
 const deleteijin = async (req, res) => {
     const { id_ijinkhusus } = req.params
-    const { id_status } = req.body
+    const { status_ijin } = req.body
     try {
-        var result = await Services.deleteijin(id_ijinkhusus, id_status);
+        var result = await Services.deleteijin(id_ijinkhusus, status_ijin);
         if (!result) {
             throw new Error("Gagal Delete Ijin");
         }
@@ -101,9 +101,9 @@ const deleteijin = async (req, res) => {
 
 const approvedIjinSakit = async (req, res) => {
     const { id_ijinkhusus } = req.params
-    const { id_status } = req.body
+    const { status_ijin } = req.body
     try {
-        var result = await Services.approvedIjinSakit(id_ijinkhusus, id_status);
+        var result = await Services.approvedIjinSakit(id_ijinkhusus, status_ijin);
         if (!result) {
             throw new Error("Gagal approve sakit")
         }
@@ -315,7 +315,7 @@ const ketijin = async (req, res) => {
 
 const ijinSakit = async (req, res) => {
     const { id_user } = req.params;
-    const { id_ketijin, tanggal_mulai, tanggal_selesai, deskripsi, id_status } = req.body;
+    const { id_ketijin, tanggal_mulai, tanggal_selesai, deskripsi, status_ijin } = req.body;
 
     if (!req.file) {
         return res.status(400).send("No file uploaded.");
@@ -323,7 +323,7 @@ const ijinSakit = async (req, res) => {
     const files = req.file.originalname;
 
     try {
-        const result = await Services.ijinSakit(id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, id_status);
+        const result = await Services.ijinSakit(id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin);
         res.status(200).json({ message: result });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -332,7 +332,7 @@ const ijinSakit = async (req, res) => {
 
 const dinasLuar = async (req, res) => {
     const { id_user } = req.params;
-    const { id_ketijin, tanggal_mulai, tanggal_selesai, deskripsi, id_status } = req.body;
+    const { id_ketijin, tanggal_mulai, tanggal_selesai, deskripsi, status_ijin } = req.body;
 
     if (!req.file) {
         return res.status(400).send("No file uploaded.");
@@ -340,7 +340,7 @@ const dinasLuar = async (req, res) => {
     const files = req.file.originalname;
 
     try {
-        const result = await Services.dinasLuar(id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, id_status);
+        const result = await Services.dinasLuar(id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin);
         res.status(200).json({ message: result });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -349,7 +349,7 @@ const dinasLuar = async (req, res) => {
 
 const pengajuanCuti = async (req, res) => {
     const { id_user } = req.params;
-    const { id_ketijin, tanggal_mulai, tanggal_selesai, deskripsi, id_status } = req.body;
+    const { id_ketijin, tanggal_mulai, tanggal_selesai, deskripsi, status_ijin } = req.body;
 
     if (!req.file) {
         return res.status(400).send("No file uploaded.");
@@ -357,7 +357,7 @@ const pengajuanCuti = async (req, res) => {
     const files = req.file.originalname;
 
     try {
-        const result = await Services.pengajuanCuti(id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, id_status);
+        const result = await Services.pengajuanCuti(id_user, id_ketijin, tanggal_mulai, files, tanggal_selesai, deskripsi, status_ijin);
         res.status(200).json({ message: result });
     } catch (error) {
         res.status(400).json({ error: error.message });
